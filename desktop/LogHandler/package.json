@@ -1,0 +1,15 @@
+{
+  "name": "loghandler",
+  "version": "1.0.0",
+  "description": "For the game to store information you must configure the log files with a file of your own. The file that must be added is log.config. These are the places you must put the file if you want it to work. Currently there are some permission issues with placing the file there on Mac.",
+  "main": "LogReader.js",
+  "dependencies": {
+    "farseer": "^4.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -4,7 +4,8 @@
 var LogReader = require('./LogReader.js');
 
 var report;
-var decklist;
+var friendlyDecklist;
+var opponentDecklist
 
 LogReader.getLogFile();
 
@@ -15,9 +16,18 @@ LogReader.beginReporting();
 var interval = setInterval(function() {
     var bool = LogReader.report();
     if (bool) {
-        decklist = LogReader.reportDecklist();
-        for (var i in decklist) {
-            console.log(decklist[i]);
+
+        friendlyDecklist = LogReader.reportFriendlyDecklist();
+        opponentDecklist = LogReader.reportOpponentDecklist();
+
+        console.log("Friendly Decklist");
+        for (var i in friendlyDecklist) {
+            console.log(friendlyDecklist[i]);
+        }
+
+        console.log("Opponent Decklist");
+        for (var i in opponentDecklist) {
+            console.log(opponentDecklist[i]);
         }
         clearInterval(interval);
     }
