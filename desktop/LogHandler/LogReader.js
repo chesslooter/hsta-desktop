@@ -104,10 +104,6 @@ farseer.on('zone-change', function(data) {
 
 farseer.on('game-start', function(data) {
     console.log("Game Start");
-    // friendlyDecklist = new Decklist();
-    // friendlyEntityList = [];
-    // opponentDecklist = new Decklist();
-    // opponentEntityList = [];
 });
 
 farseer.on('game-over', function(data) {
@@ -196,6 +192,14 @@ exports.logReader = function() {
 // Calls the pollForChange method which begins the process for handling changes to the log file.
 */
 exports.beginReporting = function() {
+    var friendlyDecklist = new Decklist();
+    // Friendly Remove Decklist
+    var friendlyEntityList = [];
+    // Opponent's decklist
+    var opponentDecklist = new Decklist();
+    // Opponent Remove Decklist
+    var opponentEntityList = [];
+    reportDecklist = false;
     farseer.start();
 };
 
