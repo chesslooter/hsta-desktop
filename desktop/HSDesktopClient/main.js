@@ -8,6 +8,7 @@ const LogReader = require('../LogHandler/LogReader.js');
 var report;
 var friendlyDecklist;
 var opponentDecklist
+var runOnce = false;
 
 
 const assetsDirectory = path.join(__dirname, 'src/assets');
@@ -122,10 +123,11 @@ ipcMain.on('kill', () => {
 });
 
 ipcMain.on('startValidation', function (event, arg) {
-  LogReader.getLogFile();
-
-  LogReader.manualLogLocation();
-
+  if(!runOnce){
+    LogReader.getLogFile();
+    LogReader.manualLogLocation();
+    runOnce = true;
+  }
   LogReader.beginReporting();
 
   var interval = setInterval(function () {
@@ -141,7 +143,6 @@ ipcMain.on('startValidation', function (event, arg) {
       clearInterval(interval);
     }
   }, 5000);
-
 });
 
 

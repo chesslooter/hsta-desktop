@@ -26,8 +26,10 @@ export class LoginComponent implements OnInit {
   }
 
   login(nBattleTag: string) {
+    this.router.navigate(['menu']);
+/*
     this.config.login(nBattleTag).subscribe(res =>
-      this.postLog(res['success'], res['id']));
+      this.postLog(res['success'], res['id']));*/
   }
 
   postLog(success: string, uID: string) {
@@ -47,8 +49,5 @@ export class LoginComponent implements OnInit {
   createUser(nBattleTag: string) {
     this.config.createUser(nBattleTag).subscribe(res =>
       this.postLog(res['success'], res['id']));
-    this.data.changeUserID(this.userID);
-    this.data.changeBattleTag(this.battleTag);
-    this.router.navigate(['menu']);
   }
 }

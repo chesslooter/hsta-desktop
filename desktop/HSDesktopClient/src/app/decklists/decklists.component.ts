@@ -14,7 +14,7 @@ import { ConfigService } from '../config.service';
 })
 export class DecklistsComponent implements OnInit {
 
-  constructor(private data: DataService, private router: Router, private config: ConfigService) {}
+  constructor(private data: DataService, private router: Router, private config: ConfigService) { }
 
   userID: string;
   battleTag: string;
@@ -26,8 +26,8 @@ export class DecklistsComponent implements OnInit {
   ngOnInit() {
     this.data.currentUserID.subscribe(message => this.userID = message);
     this.data.currentBattleTag.subscribe(message => this.battleTag = message);
-    this.data.currentDecks.subscribe(decks=> this.decks = decks);
-    this.data.currentDeckCodes.subscribe(deckCodes=> this.deckCodes = deckCodes); 
+    this.data.currentDecks.subscribe(decks => this.decks = decks);
+    this.data.currentDeckCodes.subscribe(deckCodes => this.deckCodes = deckCodes);
 
     console.log(this.decks.length);
     console.log(this.deckCodes.length);
@@ -35,18 +35,28 @@ export class DecklistsComponent implements OnInit {
 
   addDeck(deckName: string, deckCode: string) {
     if (deckName && deckCode) {
+      this.config.addDeck(this.userID, deckCode, deckName)
+        .subscribe(response => this.postAddDeck(deckName, deckCode, response['success']));
+    }
+    else {
+      console.log('invalid deckName/deckCode');
+      //Let user know there was a problem
+    }
+  }
+
+  postAddDeck(deckName: string, deckCode: string, success: boolean) {
+    if (success) {
       this.decks.push(deckName);
       this.deckCodes.push(deckCode);
-      this.config.addDeck(this.userID, deckCode, deckName)
-        .subscribe(response => console.log(response));
       this.data.changeDecks(this.decks);
       this.data.changeDeckCodes(this.deckCodes);
       this.nDeckName = "";
       this.nDeckCode = "";
     }
     else {
-      //Let user know there was a problem
+      console.log('unsuccessful server response');
     }
+
   }
 
   back() {
@@ -62,12 +72,20 @@ export class DecklistsComponent implements OnInit {
 
   deleteDeck(deckName: string) {
     var i = this.decks.indexOf(deckName);
-    if(i != -1){
+    if (i != -1) {
       this.config.deleteDeck(this.userID, this.deckCodes[i])
-      .subscribe(res => console.log(res));
-      this.decks.splice(i,1);   
-      this.deckCodes.splice(i,1);
-    }    
+        .subscribe(res => this.postDeleteDeck(deckName,i,res['success']));      
+    }
   }
-  
+
+  postDeleteDeck(deckName: string, i: number, success: boolean) {
+    if (success) {
+      this.decks.splice(i, 1);
+      this.deckCodes.splice(i, 1);
+    }
+    else {
+      console.log('unsuccessful server response')
+    }
+  }
+
 }

@@ -22,8 +22,6 @@ export class MenuComponent implements OnInit {
     this.data.currentBattleTag.subscribe(message => this.battleTag = message);
     this.config.getUserDecklists(this.userID)
       .subscribe(response => this.postGetDecks(response.deck_names,response.decks));
-    this.data.currentBattleTag.subscribe(message => this.battleTag = message);
-
   }
 
   postGetDecks(deck: string[],deckStrings: string[]){  

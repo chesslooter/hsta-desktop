@@ -29,7 +29,7 @@ function Decklist() {
 
     this.decklist = [];
 
-    this.add = function(data) {
+    this.add = function (data) {
 
         var push = true;
         for (var i = 0; i < this.decklist.length; i++) {
@@ -52,7 +52,7 @@ function Decklist() {
 
 
     // Removes the cards generated during the game from the final decklist
-    this.removeFalsePositives = function(deckEntityIds) {
+    this.removeFalsePositives = function (deckEntityIds) {
         for (var i = 0; i < this.decklist.length; i++) {
 
             var removeCard = true;
@@ -96,13 +96,13 @@ var opponentEntityList = [];
 // handled line by line and passed to the  handleChange function to parse the data.
 // Polling begins by calling beginReporting().
 */
-farseer.on('zone-change', function(data) {
+farseer.on('zone-change', function (data) {
     // console.log(data);
     // console.log(data.cardId + ' has moved from ' + data.fromTeam + ' ' + data.fromZone + ' to ' + data.toTeam + ' ' + data.toZone + ' card name ' + data.cardName + ' entity id ' + data.entityId);
     handleChange(data);
 });
 
-farseer.on('game-start', function(data) {
+farseer.on('game-start', function (data) {
     console.log("Game Start");
     // friendlyDecklist = new Decklist();
     // friendlyEntityList = [];
@@ -110,7 +110,7 @@ farseer.on('game-start', function(data) {
     // opponentEntityList = [];
 });
 
-farseer.on('game-over', function(data) {
+farseer.on('game-over', function (data) {
     console.log("Game End");
 
     // console.log(friendlyDecklist);
@@ -139,7 +139,7 @@ farseer.on('game-over', function(data) {
 // Determines whether the log file change includes a reportable Decklist for reportDecklist(). Searches for keywords 
 // in the log file that contains deck information and stores it.
 */
-handleChange = function(data) {
+handleChange = function (data) {
 
     // Friendly Deck Tracking
     if (data.fromTeam == "FRIENDLY" && data.fromZone == "HAND" && data.toTeam == "FRIENDLY" && data.toZone == "PLAY") {
@@ -188,21 +188,29 @@ handleChange = function(data) {
 /*
 // Check if the module can successfully be called from the tester.
 */
-exports.logReader = function() {
+exports.logReader = function () {
     return console.log("Module Successfully Imported");
 };
 
 /*
 // Calls the pollForChange method which begins the process for handling changes to the log file.
 */
-exports.beginReporting = function() {
+exports.beginReporting = function () {
+    var friendlyDecklist = new Decklist();
+    // Friendly Remove Decklist
+    var friendlyEntityList = [];
+    // Opponent's decklist
+    var opponentDecklist = new Decklist();
+    // Opponent Remove Decklist
+    var opponentEntityList = [];
+    reportDecklist = false;
     farseer.start();
 };
 
 /*
 // Stops the application from polling the logFile.
 */
-stopReporting = function() {
+stopReporting = function () {
     farseer.stop();
 };
 
@@ -211,28 +219,28 @@ stopReporting = function() {
 // True = decklist is ready to pull
 // False = still collecting data
 */
-exports.report = function() {
+exports.report = function () {
     return reportDecklist;
 }
 
 /*
 // Reports a Decklist to ValidationManager
 */
-exports.reportFriendlyDecklist = function() {
+exports.reportFriendlyDecklist = function () {
     return friendlyDecklist.decklist;
 };
 
 /*
 // Reports a Decklist to ValidationManager
 */
-exports.reportOpponentDecklist = function() {
+exports.reportOpponentDecklist = function () {
     return opponentDecklist.decklist;
 };
 
 /*
 // Set test log file location for testing without Hearthstone client
 */
-exports.setLogFileLocation = function(logLocation) {
+exports.setLogFileLocation = function (logLocation) {
     logFile = logLocation;
 }
 
@@ -240,7 +248,7 @@ exports.setLogFileLocation = function(logLocation) {
 // Need the config.log file placed to get logs for the game output. 
 // This wont be necesary once we get the automatic file placement working 
 */
-exports.manualLogLocation = function() {
+exports.manualLogLocation = function () {
     console.log("Place the log.config file included in the directory location specified below");
     console.log(configFileLoc);
     console.log("If that doesn't work on your machine, download the OS appropriate application below and run it once")
@@ -250,7 +258,7 @@ exports.manualLogLocation = function() {
 /*
 // Prints the variables stored
 */
-exports.printLogLocations = function() {
+exports.printLogLocations = function () {
     console.log("Log Information");
     console.log(logFile);
     console.log(configFileLoc);
@@ -273,8 +281,8 @@ var copyFile = (file, dir2) => {
     var dest = fs.createWriteStream(path.resolve(dir2, f));
 
     source.pipe(dest);
-    source.on('end', function() { console.log('Successfully copied'); });
-    source.on('error', function(err) { console.log(err); });
+    source.on('end', function () { console.log('Successfully copied'); });
+    source.on('error', function (err) { console.log(err); });
 };
 
 /*
@@ -282,7 +290,7 @@ var copyFile = (file, dir2) => {
 // in the folder to a specific location in the file structure. 
 // TODO: Allow it to verify permissions.
 */
-exports.setLogFile = function() {
+exports.setLogFile = function () {
     console.log("Set Log File");
 
     let filename = configFileName;
@@ -291,7 +299,7 @@ exports.setLogFile = function() {
     // console.log(configFileLoc);
     // console.log(ourConfigFile);
 
-    mkdirp(configFileLoc, function(err) {
+    mkdirp(configFileLoc, function (err) {
         if (err) console.error(err)
         else console.log('Successfully created directory')
     });
@@ -304,7 +312,7 @@ exports.setLogFile = function() {
 // This method also determines the correct pathing for the location of this log file 
 // depending on if you are on a Windows or Mac. 
 // */
-exports.getLogFile = function() {
+exports.getLogFile = function () {
     console.log("Get Log File");
 
     if (/^win/.test(os.platform())) {
