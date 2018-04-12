@@ -26,6 +26,8 @@
     "@angular/router": "^5.2.0",
     "bootstrap": "^4.0.0",
     "core-js": "^2.4.1",
+    "farseer": "^4.0.5",
+    "hearthstone-log-reader": "^0.4.1",
     "jquery": "^3.3.1",
     "ngx-bootstrap": "^2.0.3",
     "ngx-electron": "^1.0.4",

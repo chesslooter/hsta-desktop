@@ -19,14 +19,76 @@ var logFile = "";
 var configFileLoc = "";
 // Name of the file that configures the Hearthstone log output
 var configFileName = "log.config";
-// Name of the file tail that tracks the changes in the logFile
-var ft;
-// Array of Card IDs to be sent
-var decklist = [];
-// Array of Card IDs to be removed from decklist
-var antiDecklist = [];
 // Tells the program the decklist is ready to be called
 var reportDecklist = false;
+// The game is started, dont add to decklist
+var gameStarted = false;
+
+// Decklist Object 
+function Decklist() {
+
+    this.decklist = [];
+
+    this.add = function(data) {
+
+        var push = true;
+        for (var i = 0; i < this.decklist.length; i++) {
+            if (this.decklist[i].cardId == data.cardId) {
+                this.decklist[i].count += 1;
+                push = false;
+            }
+        }
+
+        if (push) {
+            this.decklist.push({
+                cardId: data.cardId,
+                entityId: data.entityId,
+                count: 1
+            });
+        }
+
+    }
+
+
+
+    // Removes the cards generated during the game from the final decklist
+    this.removeFalsePositives = function(deckEntityIds) {
+        for (var i = 0; i < this.decklist.length; i++) {
+
+            var removeCard = true;
+            for (var j = 0; j < deckEntityIds.length; j++) {
+
+                // Doesn't remove card from deck if it was in the original entities
+                if (deckEntityIds[j] === this.decklist[i].entityId) {
+                    removeCard = false;
+                }
+            }
+
+            if (removeCard) {
+                console.log("REMOVED CARD");
+                if (this.decklist[i].count == 1) {
+                    delete this.decklist[i];
+                } else {
+                    this.decklist[i].count -= 1;
+                }
+            }
+
+        }
+    }
+
+}
+
+/*
+// DECKLISTS
+*/
+// Friendly's Decklsit
+var friendlyDecklist = new Decklist();
+// Friendly Remove Decklist
+var friendlyEntityList = [];
+// Opponent's decklist
+var opponentDecklist = new Decklist();
+// Opponent Remove Decklist
+var opponentEntityList = [];
 
 /*
 // Searches for new entries in the logFile specified to determine whether 
@@ -35,18 +97,40 @@ var reportDecklist = false;
 // Polling begins by calling beginReporting().
 */
 farseer.on('zone-change', function(data) {
+    // console.log(data);
+    // console.log(data.cardId + ' has moved from ' + data.fromTeam + ' ' + data.fromZone + ' to ' + data.toTeam + ' ' + data.toZone + ' card name ' + data.cardName + ' entity id ' + data.entityId);
     handleChange(data);
 });
 
 farseer.on('game-start', function(data) {
     console.log("Game Start");
-    decklist = [];
-    antiDecklist = [];
+    // friendlyDecklist = new Decklist();
+    // friendlyEntityList = [];
+    // opponentDecklist = new Decklist();
+    // opponentEntityList = [];
 });
 
 farseer.on('game-over', function(data) {
     console.log("Game End");
-    decklist = decklistDifferential(decklist, antiDecklist);
+
+    // console.log(friendlyDecklist);
+    // console.log(opponentDecklist);
+
+    // console.log("Friendly Remove");
+    // console.log(friendlyEntityList);
+    // console.log("Opponent Remove");
+    // console.log(opponentEntityList);
+
+    friendlyDecklist.removeFalsePositives(friendlyEntityList);
+    opponentDecklist.removeFalsePositives(opponentEntityList);
+
+    // // Final Friendly Decklist
+    // console.log("Final Friendly Decklist");
+    // console.log(friendlyDecklist);
+    // // Final Opponent Decklist
+    // console.log("Final Opponent Decklist");
+    // console.log(opponentDecklist);
+
     reportDecklist = true;
     stopReporting();
 });
@@ -57,49 +141,47 @@ farseer.on('game-over', function(data) {
 */
 handleChange = function(data) {
 
-    if (data.fromTeam == "FRIENDLY" && data.fromZone == "DECK" && data.toTeam == "FRIENDLY" && data.toZone == "HAND") {
-        constructDecklist(data.cardId);
+    // Friendly Deck Tracking
+    if (data.fromTeam == "FRIENDLY" && data.fromZone == "HAND" && data.toTeam == "FRIENDLY" && data.toZone == "PLAY") {
+        friendlyDecklist.add(data);
     }
-    if (data.fromTeam == "FRIENDLY" && data.fromZone == "HAND" && data.toTeam == "FRIENDLY" && data.toZone == "DECK") {
-        constructAntiDecklist(data.cardId);
+    // Opponent Deck Tracking
+    if (data.fromTeam == "OPPOSING" && data.fromZone == "HAND" && data.toTeam == "OPPOSING" && data.toZone == "PLAY") {
+        opponentDecklist.add(data);
     }
-    if (data.fromTeam == "OPPOSING" && data.fromZone == "HAND" && data.toTeam == "FRIENDLY" && data.toZone == "DECK") {
-        constructAntiDecklist(data.cardId);
-    }
-
-};
-
-/*
-// Constructs a Decklist object from the log file that is being parsed.
-// Adds each ID of cards drawn throughout the game to the decklist
-*/
-constructDecklist = function(cardId) {
-    decklist.push(cardId);
-};
-
-/*
-// Constructs a anti-Decklist object from the log file that is being parsed.
-// Adds the ID of cards that are added to the deck so that we can remove these
-// from the final decklist.
-*/
-constructAntiDecklist = function(cardId) {
-    antiDecklist.push(cardId);
-};
-
-/*
-// Removes the cards that were added to the decklist that were not 
-// originally in the deck
-*/
-decklistDifferential = function(decklist1, decklist2) {
-
-    for (var i in decklist2) {
-        for (var j in decklist1) {
-            if (decklist1[j] === decklist2[i]) {
-                decklist1 = decklist1.splice(j, 1);
+    // Friendly Deck Tracking
+    if (data.toTeam == "FRIENDLY" && data.toZone == "GRAVEYARD" && data.fromZone != "PLAY") {
+        for (var i = 0; i < friendlyEntityList.length; i++) {
+            if (data.entityId == friendlyEntityList[i]) {
+                friendlyDecklist.add(data);
             }
         }
     }
-    return decklist1;
+    // Opponent Deck Tracking
+    if (data.toTeam == "OPPOSING" && data.toZone == "GRAVEYARD" && data.fromZone != "PLAY") {
+        for (var i = 0; i < opponentEntityList.length; i++) {
+            if (data.entityId == opponentEntityList[i]) {
+                opponentDecklist.add(data);
+            }
+        }
+    }
+
+    // Add EntityIds of cards in friendly deck
+    if (data.toTeam == "FRIENDLY" && data.toZone == "DECK") {
+        if (!gameStarted) {
+            friendlyEntityList.push(data.entityId);
+        }
+    }
+    // Add EntityIds of cards in opponent deck
+    if (data.toTeam == "OPPOSING" && data.toZone == "DECK") {
+        if (!gameStarted) {
+            opponentEntityList.push(data.entityId);
+        }
+    }
+    // Stops the Entity Lists from being added to after the game has started
+    if (data.toTeam == "FRIENDLY" && data.toZone == "PLAY (Hero Power)") {
+        gameStarted = true;
+    }
 
 };
 
@@ -114,7 +196,6 @@ exports.logReader = function() {
 // Calls the pollForChange method which begins the process for handling changes to the log file.
 */
 exports.beginReporting = function() {
-    console.log("starting");
     farseer.start();
 };
 
@@ -137,8 +218,15 @@ exports.report = function() {
 /*
 // Reports a Decklist to ValidationManager
 */
-exports.reportDecklist = function() {
-    return decklist;
+exports.reportFriendlyDecklist = function() {
+    return friendlyDecklist.decklist;
+};
+
+/*
+// Reports a Decklist to ValidationManager
+*/
+exports.reportOpponentDecklist = function() {
+    return opponentDecklist.decklist;
 };
 
 /*

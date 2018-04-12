@@ -24,7 +24,7 @@ export class ConfigService {
   deleteDeck(userid, deckcode) {
     console.log('delete that');
     return this.http.get(this.url + '/api/delete_deck?userid=' + 
-            userid + '&deckcode=' + deckcode).map(res => res.json());
+            userid + '&deckcode=' + deckcode);
   }
 
   updateDecklistName(userid, deckcode, deckname) {
@@ -33,7 +33,7 @@ export class ConfigService {
   }
 
   createUser(email) {
-    return this.http.get(this.url + '/api/create_user?email=' + email).map(res => res.json());
+    return this.http.get(this.url + '/api/create_user?battletag=' + email).map(res => res.json());
   }
 
   login(email) {
@@ -42,7 +42,10 @@ export class ConfigService {
 
   verify(){
     this.electronService.ipcRenderer.send('startValidation');
-    this.electronService.ipcRenderer.on('log', (event, arg) => {
+    this.electronService.ipcRenderer.once('logF', (event, arg) => {
+      console.log(arg);
+    });
+    this.electronService.ipcRenderer.once('logO', (event, arg) => {
       console.log(arg);
     });
   }

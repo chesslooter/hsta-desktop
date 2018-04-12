@@ -29,6 +29,8 @@ export class DecklistsComponent implements OnInit {
     this.data.currentDecks.subscribe(decks=> this.decks = decks);
     this.data.currentDeckCodes.subscribe(deckCodes=> this.deckCodes = deckCodes); 
 
+    console.log(this.decks.length);
+    console.log(this.deckCodes.length);
   }
 
   addDeck(deckName: string, deckCode: string) {
@@ -61,8 +63,9 @@ export class DecklistsComponent implements OnInit {
   deleteDeck(deckName: string) {
     var i = this.decks.indexOf(deckName);
     if(i != -1){
-      this.config.deleteDeck(this.userID, this.deckCodes[i]);
-      this.decks.splice(i,1);      
+      this.config.deleteDeck(this.userID, this.deckCodes[i])
+      .subscribe(res => console.log(res));
+      this.decks.splice(i,1);   
       this.deckCodes.splice(i,1);
     }    
   }

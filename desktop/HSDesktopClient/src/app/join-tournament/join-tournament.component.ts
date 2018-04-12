@@ -30,10 +30,11 @@ export class JoinTournamentComponent implements OnInit {
     this.data.currentUserID.subscribe(message => this.userID = message);
   }
 
-  joinTournament() {
+  joinTournament(tournament: string) {
     //TODO: add logic to check if tournament is valid. If so, open up option to select decks with number 
     //equal to those valid for the tournament
     this.success = true;
+    this.tournament = tournament;
     //this.config.joinTournament(this.userID,this.tournament)
     //.subscribe(res => console.log(res));
     if(this.success){

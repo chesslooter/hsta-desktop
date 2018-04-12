@@ -1,8 +1,14 @@
-const { app, BrowserWindow, ipcMain, Tray, Shell, Menu} = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Shell, Menu } = require('electron');
 const path = require('path');
 const electron = require('electron');
 const platform = require('os').platform();
+
+//Log Reader
 const LogReader = require('../LogHandler/LogReader.js');
+var report;
+var friendlyDecklist;
+var opponentDecklist
+
 
 const assetsDirectory = path.join(__dirname, 'src/assets');
 
@@ -42,95 +48,100 @@ const getWindowPosition = () => {
   const x = Math.round((windowBounds.width / 2));
 
   // Position window 4 pixels vertically below the tray icon
-  const y = Math.round(trayBounds.y + trayBounds.height -500);
+  const y = Math.round(trayBounds.y + trayBounds.height - 500);
 
   return { x: x, y: y };
 };
 
 const createWindow = () => {
-    console.log("creating window");
-    mainWindow = new BrowserWindow({
-      width: 520, //window width should be 520
-      height: 440, //window height should be 440
-      show: true,
-      frame: true,
-      fullscreenable: true, 
-      alwaysOnTop: false,
-      resizable: true, //turn off to lock size 
-      transparent: false,
-      webPreferences: {
-        // Prevents renderer process code from not running when window is
-        // hidden
-        backgroundThrottling: false,
-        webSecurity: false
-      },
-        icon: __dirname + 'assets/icon.png',
-        backgroundColor: '#555555',
-    });
-    mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
-   // mainWindow.webContents.openDevTools();
+  console.log("creating window");
+  mainWindow = new BrowserWindow({
+    width: 520, //window width should be 520
+    height: 440, //window height should be 440
+    show: true,
+    frame: true,
+    fullscreenable: true,
+    alwaysOnTop: false,
+    resizable: true, //turn off to lock size 
+    transparent: false,
+    webPreferences: {
+      // Prevents renderer process code from not running when window is
+      // hidden
+      backgroundThrottling: false,
+      webSecurity: false
+    },
+    icon: __dirname + 'assets/icon.png',
+    backgroundColor: '#555555',
+  });
+  mainWindow.loadURL(`file://${__dirname}/dist/index.html`);
+  // mainWindow.webContents.openDevTools();
 
-    mainWindow.on('click', () => {
-      mainWindow.hide();
-    });
+  mainWindow.on('click', () => {
+    mainWindow.hide();
+  });
 
-    // Hide the window when it loses focus
-    //mainWindow.on('blur', () => {
-      //if (!mainWindow.webContents.isDevToolsOpened()) {
-        //mainWindow.hide();
-      //}
-     //});
+  // Hide the window when it loses focus
+  //mainWindow.on('blur', () => {
+  //if (!mainWindow.webContents.isDevToolsOpened()) {
+  //mainWindow.hide();
+  //}
+  //});
 
 };
 
 const toggleWindow = () => {
-if (mainWindow.isVisible()) {
-  mainWindow.hide();
-} else {
-  showWindow();
-}
+  if (mainWindow.isVisible()) {
+    mainWindow.hide();
+  } else {
+    showWindow();
+  }
 };
 
 const showWindow = () => {
-const position = getWindowPosition();
-mainWindow.setPosition(position.x, position.y, false);
-mainWindow.show();
-mainWindow.focus();
+  const position = getWindowPosition();
+  mainWindow.setPosition(position.x, position.y, false);
+  mainWindow.show();
+  mainWindow.focus();
 
 };
 
 ipcMain.on('show-window', () => {
-showWindow();
+  showWindow();
 });
 
 ipcMain.on('hide-window', () => {
-mainWindow.hide();
+  mainWindow.hide();
 });
 
 ipcMain.on('reload-window', () => {
-mainWindow.loadURL(`file://${path.join(__dirname, 'index.html')}`);
+  mainWindow.loadURL(`file://${path.join(__dirname, 'index.html')}`);
 });
 
 ipcMain.on('kill', () => {
   app.quit();
 });
 
-ipcMain.on('startValidation', () => {
+ipcMain.on('startValidation', function (event, arg) {
   LogReader.getLogFile();
+
+  LogReader.manualLogLocation();
+
   LogReader.beginReporting();
 
-  var interval = setInterval(function() {
+  var interval = setInterval(function () {
     var bool = LogReader.report();
-    mainWindow.webContents.send('log',bool);
-    console.log(bool);
     if (bool) {
-        decklist = LogReader.reportDecklist();
-        for (var i in decklist) {
-            console.log(decklist[i]);
-        }
-        clearInterval(interval);
+
+      friendlyDecklist = LogReader.reportFriendlyDecklist();
+      opponentDecklist = LogReader.reportOpponentDecklist();
+
+      event.sender.send('logF', friendlyDecklist);
+      event.sender.send('logO', opponentDecklist);
+
+      clearInterval(interval);
     }
-}, 5000);
+  }, 5000);
+
 });
 
 

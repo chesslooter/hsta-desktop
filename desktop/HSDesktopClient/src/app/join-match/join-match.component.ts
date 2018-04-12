@@ -17,9 +17,11 @@ export class JoinMatchComponent implements OnInit {
   ngOnInit() {
   }
 
-  joinMatch() {
-    //API call with logic to handle successful match join. If successful, proceed to 'ban'
+  match;
 
+  joinMatch(match: string) {
+    //API call with logic to handle successful match join. If successful, proceed to 'ban'
+this.match = match;
     this.router.navigate(['ban']);
   }
 
