@@ -25,15 +25,17 @@ export class JoinMatchComponent implements OnInit {
   joinMatch(match: string) {
     //API call with logic to handle successful match join. If successful, proceed to 'ban'
     this.match = match;
-    this.config.joinMatch(this.userID,this.match)
-    .subscribe(res => console.log(res));
+    //this.config.joinMatch(this.userID,this.match)
+    //.subscribe(res => console.log(res));
     //this.router.navigate(['ban']);
+    this.router.navigate(['validation']);
+
   }
 
   postJoin(success){
     if(success){
 
-      this.router.navigate(['ban']);
+      this.router.navigate(['validation']);
     }
     else {
       console.log('unsuccessful server response');

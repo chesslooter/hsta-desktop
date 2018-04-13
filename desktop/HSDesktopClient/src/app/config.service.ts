@@ -72,7 +72,7 @@ export class ConfigService {
   }
 
   joinMatch(userID, matchID) {
-    return this.http.get(this.url +'/api/add_tournament_deck?userid='+userID+'&matchid='+matchID)
+    return this.http.get(this.url +'/api/get_match?userid='+userID+'&matchid='+matchID)
     .map(res=>res.json());
   }
 

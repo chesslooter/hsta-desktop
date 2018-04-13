@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config.service';
 import { Observable } from 'rxjs/Observable';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-join-tournament',
@@ -44,6 +45,7 @@ export class JoinTournamentComponent implements OnInit {
       if (eDecks.length > 0 && eDeckCodes.length > 0) {
         this.enteredDecks = eDecks;
         this.enteredDeckCodes = eDeckCodes;
+        
         if (started) {
           this.locked = true;
         }
@@ -58,12 +60,10 @@ export class JoinTournamentComponent implements OnInit {
   submitDecks() {
     this.config.submitDecks(this.userID,this.tournament,this.enteredDeckCodes)
     .subscribe(res => this.postSubmit(res['success']));
-
   }
 
   postSubmit(success: boolean) {
     if (success) {
-
       this.router.navigate(['match']);
     }
     else {
@@ -75,6 +75,7 @@ export class JoinTournamentComponent implements OnInit {
     if (this.enteredDecks.includes(deckName)) {
       var i = this.enteredDecks.indexOf(deckName);
       this.enteredDecks.splice(i, 1);
+      this.enteredDeckCodes.splice(i,1);
     }
     else {
       this.enteredDecks.push(deckName);
