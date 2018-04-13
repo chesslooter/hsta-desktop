@@ -39,7 +39,7 @@
         <div class="row justify-content-center">
           <div class="form-check">
             <div *ngFor="let deck of decks">
-              <input #deckName [disabled]="deckMax(deck)" (click)="addTournamentDeck(deck)" class="form-check-input" type="checkbox" value="" id="{{deck}}">
+              <input #deckName [disabled]="deckMax(deck)" (click)="addTournamentDeck(deck)" class="form-check-input" checked="checkmark(deck)" type="checkbox" value="" id="{{deck}}">
               <label class="form-check-label" for="defaultCheck1">
                 {{deck}}
               </label>

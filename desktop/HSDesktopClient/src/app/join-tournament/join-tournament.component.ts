@@ -104,4 +104,12 @@ export class JoinTournamentComponent implements OnInit {
     this.router.navigate(['menu']);
   }
 
+  checkmark(deckname){
+    for(var i = 0; i<this.enteredDecks.length;i++){
+      if(deckname == this.enteredDecks[i]){
+        return "checked";
+      }
+    }
+  }
+
 }
