@@ -5,7 +5,6 @@ import { NgForm } from '@angular/forms';
 import { ConfigService } from '../config.service';
 import { Observable } from 'rxjs/Observable';
 
-//TODO: Change email to Battletag
 
 @Component({
   selector: 'app-login',
@@ -26,13 +25,12 @@ export class LoginComponent implements OnInit {
   }
 
   login(nBattleTag: string) {
-    this.router.navigate(['menu']);
-/*
     this.config.login(nBattleTag).subscribe(res =>
-      this.postLog(res['success'], res['id']));*/
+      this.postLog(res['success'], res['id']));
   }
 
   postLog(success: string, uID: string) {
+    console.log(success)
     if (success) {
       this.userID = uID;
       console.log(uID);

@@ -25,6 +25,8 @@ export class MenuComponent implements OnInit {
   }
 
   postGetDecks(deck: string[],deckStrings: string[]){  
+    console.log(deck);
+    console.log(deckStrings);
     //Set decks with info from server
     this.data.changeDecks(deck);
     this.data.changeDeckCodes(deckStrings);
@@ -39,7 +41,7 @@ export class MenuComponent implements OnInit {
   }
 
   enterTournament() {
-    this.router.navigate(['tournament']);
+      this.router.navigate(['tournament']);
   }
 
   exit() {

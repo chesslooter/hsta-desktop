@@ -3,6 +3,7 @@ import { Http, HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import 'rxjs/Rx';
+import { concat } from 'rxjs/operator/concat';
 
 @Injectable()
 export class ConfigService {
@@ -24,12 +25,12 @@ export class ConfigService {
   deleteDeck(userid, deckcode) {
     console.log('delete that');
     return this.http.get(this.url + '/api/delete_deck?userid=' + 
-            userid + '&deckcode=' + deckcode);
+            userid + '&deckcode=' + deckcode).map(res=>res.json());
   }
 
   updateDecklistName(userid, deckcode, deckname) {
     return this.http.get(this.url + '/api/update_decklist_name?userid=' + 
-            userid + '&deckcode=' + deckcode + '&deckname=' + deckname);
+            userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res=>res.json());
   }
 
   createUser(email) {
@@ -37,7 +38,7 @@ export class ConfigService {
   }
 
   login(email) {
-    return this.http.get(this.url + '/api/login?email=' + email).map(res => res.json());
+    return this.http.get(this.url + '/api/login?battletag=' + email).map(res => res.json());
   }
 
   verify(){
@@ -51,7 +52,28 @@ export class ConfigService {
   }
 
   joinTournament(userID, tournamentID){
-    return this.http.get(this.url + '/api/join_tournament?userid='+userID +'&tournamentid='+tournamentID);
+    return this.http.get(this.url + '/api/join_tournament?userid='+userID +'&tournamentid='+tournamentID)
+    .map(res => res.json());
+  }
+
+  submitDecks(userID, tournamentID, deckCodes){
+    var codes: string = '';
+    for(var i =0; i<deckCodes.length; i++){
+      if(i != deckCodes.length-1) {
+        codes = codes.concat(deckCodes[i],',');
+      }
+      else {
+        codes = codes.concat(deckCodes[i]);
+
+      }
+    }
+    return this.http.get(this.url +'/api/add_tournament_deck?userid='+userID+'&tournamentid='+tournamentID+'&deckcode='+codes)
+    .map(res => res.json());
+  }
+
+  joinMatch(userID, matchID) {
+    return this.http.get(this.url +'/api/add_tournament_deck?userid='+userID+'&matchid='+matchID)
+    .map(res=>res.json());
   }
 
   exit(){

@@ -40,7 +40,6 @@ export class DecklistsComponent implements OnInit {
     }
     else {
       console.log('invalid deckName/deckCode');
-      //Let user know there was a problem
     }
   }
 
@@ -56,7 +55,6 @@ export class DecklistsComponent implements OnInit {
     else {
       console.log('unsuccessful server response');
     }
-
   }
 
   back() {
@@ -73,15 +71,19 @@ export class DecklistsComponent implements OnInit {
   deleteDeck(deckName: string) {
     var i = this.decks.indexOf(deckName);
     if (i != -1) {
+      console.log(this.deckCodes[i]);  
       this.config.deleteDeck(this.userID, this.deckCodes[i])
         .subscribe(res => this.postDeleteDeck(deckName,i,res['success']));      
     }
   }
 
-  postDeleteDeck(deckName: string, i: number, success: boolean) {
+  postDeleteDeck(deckName: string, i: number, success) {
+    console.log(success);
     if (success) {
       this.decks.splice(i, 1);
       this.deckCodes.splice(i, 1);
+      this.data.changeDecks(this.decks);
+      this.data.changeDeckCodes(this.deckCodes);
     }
     else {
       console.log('unsuccessful server response')

@@ -15,14 +15,29 @@ export class JoinMatchComponent implements OnInit {
   constructor(private data: DataService, private router: Router, private config: ConfigService) { }
 
   ngOnInit() {
+    this.data.currentUserID.subscribe(message => this.userID = message);
   }
 
   match;
+  userID: string;
+
 
   joinMatch(match: string) {
     //API call with logic to handle successful match join. If successful, proceed to 'ban'
-this.match = match;
-    this.router.navigate(['ban']);
+    this.match = match;
+    this.config.joinMatch(this.userID,this.match)
+    .subscribe(res => console.log(res));
+    //this.router.navigate(['ban']);
+  }
+
+  postJoin(success){
+    if(success){
+
+      this.router.navigate(['ban']);
+    }
+    else {
+      console.log('unsuccessful server response');
+    }
   }
 
   back() {
