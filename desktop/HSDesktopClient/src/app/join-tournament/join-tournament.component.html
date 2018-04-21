@@ -2,39 +2,37 @@
 <html lang="en">
 
 <head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-    crossorigin="anonymous">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <title>Join Tournament Page</title>
+    <title>Join Tournament Page</title>
 </head>
 
 <body>
-  <div class="container">
-    <form #tournamentForm="ngForm">
-      <div class="row justify-content-center">
-        <div id="inputs" class="col-md-auto">
-          <input #nTournament type="text" class="form-control" placeholder="TournamentID" name="tournament" [(ngModel)]="tournament"
-            required>
-        </div>
-      </div>
-      <div class="row justify-content-center">
-        <div id="inputs" class="col-md-auto">
-          <button [disabled]="tournamentForm.form.invalid" (click)="joinTournament(nTournament.value)" type="button" class="btn btn-primary">Join Tournament</button>
-        </div>
-        <div id="inputs" class="col-md-auto">
-          <button (click)="back()" type="button" class="btn btn-primary">Back</button>
-        </div>
-      </div>
-      <div *ngIf="success" id="postGetTournament">
+    <div class="container">
+        <form #tournamentForm="ngForm">
+            <div class="row justify-content-center">
+                <div id="inputs" class="col-md-auto">
+                    <input #nTournament type="text" class="form-control" placeholder="TournamentID" name="tournament" [(ngModel)]="tournament" required>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div id="inputs" class="col-md-auto">
+                    <button [disabled]="tournamentForm.form.invalid" (click)="joinTournament(nTournament.value)" type="button" class="btn btn-primary">Join Tournament</button>
+                </div>
+                <div id="inputs" class="col-md-auto">
+                    <button (click)="back()" type="button" class="btn btn-primary">Back</button>
+                </div>
+            </div>
+            <div *ngIf="success" id="postGetTournament">
 
-        <div class="row justify-content-center">
-          <p>This tournament requires {{numDecks}} decks. Please select {{numDecks}} from the list below.</p>
-        </div>
+                <div class="row justify-content-center">
+                    <p>This tournament requires {{numDecks}} decks. Please select {{numDecks}} from the list below.</p>
+                </div>
 
         <div class="row justify-content-center">
           <div class="form-check">
@@ -43,28 +41,25 @@
               <label class="form-check-label" for="defaultCheck1">
                 {{deck}}
               </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-center">
+                    <div id="inputs" class="col-md-auto">
+                        <button [disabled]="validSubmit()" (click)="submitDecks()" type="button" class="btn btn-primary">Submit Decks</button>
+                    </div>
+                </div>
+
             </div>
-          </div>
-        </div>
+        </form>
+    </div>
 
-        <div class="row justify-content-center">
-          <div id="inputs" class="col-md-auto">
-            <button [disabled]="validSubmit()" (click)="submitDecks()" type="button" class="btn btn-primary">Submit Decks</button>
-          </div>
-        </div>
-
-      </div>
-    </form>
-  </div>
-
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-    crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 </body>
 
 </html>>

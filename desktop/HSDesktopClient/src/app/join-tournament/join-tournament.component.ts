@@ -58,8 +58,8 @@ export class JoinTournamentComponent implements OnInit {
   }
 
   submitDecks() {
-    this.config.submitDecks(this.userID, this.tournament, this.enteredDeckCodes)
-      .subscribe(res => this.postSubmit(res['success']));
+    this.config.submitDecks(this.userID,this.tournament,this.enteredDeckCodes)
+    .subscribe(res => this.postSubmit(res['success']));
   }
 
   postSubmit(success: boolean) {
