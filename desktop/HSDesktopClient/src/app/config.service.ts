@@ -17,20 +17,20 @@ export class ConfigService {
     return this.http.get(this.url + '/api/get_user_decklists?userid=' + userid).map(res => res.json());
   }
 
-  addDeck(userid, deckcode, deckname) {      
-    return this.http.get(this.url + '/api/add_deck?userid=' + 
-            userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res => res.json());
+  addDeck(userid, deckcode, deckname) {
+    return this.http.get(this.url + '/api/add_deck?userid=' +
+      userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res => res.json());
   }
 
   deleteDeck(userid, deckcode) {
     console.log('delete that');
-    return this.http.get(this.url + '/api/delete_deck?userid=' + 
-            userid + '&deckcode=' + deckcode).map(res=>res.json());
+    return this.http.get(this.url + '/api/delete_deck?userid=' +
+      userid + '&deckcode=' + deckcode).map(res => res.json());
   }
 
   updateDecklistName(userid, deckcode, deckname) {
-    return this.http.get(this.url + '/api/update_decklist_name?userid=' + 
-            userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res=>res.json());
+    return this.http.get(this.url + '/api/update_decklist_name?userid=' +
+      userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res => res.json());
   }
 
   createUser(email) {
@@ -41,45 +41,58 @@ export class ConfigService {
     return this.http.get(this.url + '/api/login?battletag=' + email).map(res => res.json());
   }
 
-  verify(){
+  verify(uID, oID) {
+    var uBody = {};
+    var uDeck = {};
+    var oBody = {};
+    var oDeck = {};
     this.electronService.ipcRenderer.send('startValidation');
     this.electronService.ipcRenderer.once('logF', (event, arg) => {
-      console.log(arg);
+      for (var i = 0; i < arg.length; i++) {
+        uDeck[arg[i]['cardId']] = arg[i]['count'];
+      }
+      uBody['userid'] = uID;
+      uBody['deckjson'] = uDeck;
+      this.http.post(this.url + '/api/validate_decklist', uBody).map(res => res.json()).subscribe(res => console.log(res));
+
     });
     this.electronService.ipcRenderer.once('logO', (event, arg) => {
-      console.log(arg);
+      for (var i = 0; i < arg.length; i++) {
+        oDeck[arg[i]['cardId']] = arg[i]['count'];
+      }
+      oBody['userid'] = oID;
+      oBody['deckjson'] = oDeck;
+      this.http.post(this.url + '/api/validate_decklist', oBody).map(res => res.json()).subscribe(res => console.log(res));
     });
   }
 
-  joinTournament(userID, tournamentID){
-    return this.http.get(this.url + '/api/join_tournament?userid='+userID +'&tournamentid='+tournamentID)
-    .map(res => res.json());
+  joinTournament(userID, tournamentID) {
+    return this.http.get(this.url + '/api/join_tournament?userid=' + userID + '&tournamentid=' + tournamentID)
+      .map(res => res.json());
   }
 
-  submitDecks(userID, tournamentID, deckCodes){
+  submitDecks(userID, tournamentID, deckCodes) {
     var codes: string = '';
-    for(var i =0; i<deckCodes.length; i++){
-      if(i != deckCodes.length-1) {
-        codes = codes.concat(deckCodes[i],',');
+    for (var i = 0; i < deckCodes.length; i++) {
+      if (i != deckCodes.length - 1) {
+        codes = codes.concat(deckCodes[i], ',');
       }
       else {
         codes = codes.concat(deckCodes[i]);
 
       }
     }
-    return this.http.get(this.url +'/api/add_tournament_deck?userid='+userID+'&tournamentid='+tournamentID+'&deckcode='+codes)
-    .map(res => res.json());
+    return this.http.get(this.url + '/api/add_tournament_deck?userid=' + userID + '&tournamentid=' + tournamentID + '&deckcode=' + codes)
+      .map(res => res.json());
   }
 
   joinMatch(userID, matchID) {
-    return this.http.get(this.url +'/api/get_match?userid='+userID+'&matchid='+matchID)
-    .map(res=>res.json());
+    return this.http.get(this.url + '/api/get_match?userid=' + userID + '&matchid=' + matchID)
+      .map(res => res.json());
   }
 
-  exit(){
+  exit() {
     this.electronService.ipcRenderer.send('kill');
   }
-
-
 
 }
