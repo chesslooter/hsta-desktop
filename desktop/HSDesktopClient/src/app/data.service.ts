@@ -8,16 +8,22 @@ export class DataService {
   private userIDSource = new BehaviorSubject<string>("");
   private decksSource = new BehaviorSubject<string[]>([]);
   private deckCodesSource = new BehaviorSubject<string[]>([]);
+  private validatingSource = new BehaviorSubject<boolean>(false);
 
   currentBattleTag = this.battleTagSource.asObservable();
   currentUserID = this.userIDSource.asObservable();
   currentDecks = this.decksSource.asObservable();
   currentDeckCodes = this.deckCodesSource.asObservable();
+  currentValidating = this.validatingSource.asObservable();
 
   constructor() { }
 
   changeUserID(ID: string) {
     this.userIDSource.next(ID)
+  }
+
+  changeValidating(val: boolean) {
+    this.validatingSource.next(val);
   }
 
   changeBattleTag(battleTag: string) {

@@ -18,11 +18,13 @@ export class ValidationComponent implements OnInit {
   activeCardList=[];
   uID;
   oID = "";
+  validating;
 
   ngOnInit() {  
     this.data.currentDecks.subscribe(decks => this.decks=decks);
     this.data.currentDeckCodes.subscribe(deckCodes=>this.deckCodes=deckCodes);
     this.data.currentUserID.subscribe(uID =>this.uID = uID);
+    this.data.currentValidating.subscribe(val => this.validating = val);
     //Call API and get registered decks for user, set decks[] equal to this
     //Can get cards all at once here, and then bind activeCardsList upon selecting deck button,
     //as opposed to in validate()

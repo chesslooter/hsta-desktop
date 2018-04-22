@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ElectronService } from 'ngx-electron';
 import 'rxjs/Rx';
 import { concat } from 'rxjs/operator/concat';
+import { DataService } from './data.service';
 
 @Injectable()
 export class ConfigService {
@@ -11,7 +12,7 @@ export class ConfigService {
   //private url = 'http://192.168.1.12:3000'; //Test URL for running server when not pushed to Heroku
   //private url = 'http://localhost:3000';
 
-  constructor(private http: Http, private electronService: ElectronService) { }
+  constructor(private http: Http, private electronService: ElectronService, private data: DataService) { }
 
   getUserDecklists(userid) {
     return this.http.get(this.url + '/api/get_user_decklists?userid=' + userid).map(res => res.json());
@@ -42,6 +43,7 @@ export class ConfigService {
   }
 
   verify(uID, oID) {
+    this.data.changeValidating(true);
     var uBody = {};
     var uDeck = {};
     var oBody = {};
@@ -54,7 +56,6 @@ export class ConfigService {
       uBody['userid'] = uID;
       uBody['deckjson'] = uDeck;
       this.http.post(this.url + '/api/validate_decklist', uBody).map(res => res.json()).subscribe(res => console.log(res));
-
     });
     this.electronService.ipcRenderer.once('logO', (event, arg) => {
       for (var i = 0; i < arg.length; i++) {
@@ -63,6 +64,8 @@ export class ConfigService {
       oBody['userid'] = oID;
       oBody['deckjson'] = oDeck;
       this.http.post(this.url + '/api/validate_decklist', oBody).map(res => res.json()).subscribe(res => console.log(res));
+      this.data.changeValidating(false);
+
     });
   }
 

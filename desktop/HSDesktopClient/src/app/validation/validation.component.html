@@ -7,10 +7,10 @@
     </div>
     <div class="row justify-content-center">
         <div id="inputs" class="col-md-auto">
-            <button (click)="validate()" type="button" class="btn btn-primary">Validate</button>
+            <button [disabled]="validating" (click)="validate()" type="button" class="btn btn-primary">Validate</button>
         </div>
         <div id="inputs" class="col-md-auto">
-            <button (click)="back()" type="button" class="btn btn-primary">Back</button>
+            <button [disabled]="validating" (click)="back()" type="button" class="btn btn-primary">Back</button>
         </div>
     </div>
 </div>
