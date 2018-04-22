@@ -19,15 +19,13 @@ export class ValidationComponent implements OnInit {
   uID;
   oID = "";
   validating;
+  tID;
 
   ngOnInit() {  
     this.data.currentDecks.subscribe(decks => this.decks=decks);
     this.data.currentDeckCodes.subscribe(deckCodes=>this.deckCodes=deckCodes);
     this.data.currentUserID.subscribe(uID =>this.uID = uID);
     this.data.currentValidating.subscribe(val => this.validating = val);
-    //Call API and get registered decks for user, set decks[] equal to this
-    //Can get cards all at once here, and then bind activeCardsList upon selecting deck button,
-    //as opposed to in validate()
   }
 
   back() {
@@ -35,12 +33,7 @@ export class ValidationComponent implements OnInit {
   }
 
   validate() {
-    this.config.verify(this.uID, this.oID);    
-    //First, must call API to retrieve list of cards for selected deck and setting activeCardList[] equal to this
-    //Then, must call Brian's script, getting each card as it is played and checking to see if it's in activeCardList[]
-    //If this ever fails, end Brian's script and go to error
-    //Otherwise, continue until Brian gives "Match End"
-    //Button should be disabled up until "Match End"
+    this.config.verify(this.uID, this.oID, this.tID);    
   }
 
 }

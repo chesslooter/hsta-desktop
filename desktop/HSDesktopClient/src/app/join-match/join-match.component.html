@@ -2,7 +2,10 @@
   <form #matchForm="ngForm">
     <div class="row justify-content-center">
       <div id="inputs" class="col-md-auto">
-        <input #nMatch type="text" class="form-control" placeholder="MatchID" name="match" [(ngModel)]="match" required>
+        <input #nMatch type="text" class="form-control" id="match" placeholder="MatchID" name="match" [(ngModel)]="match" required>
+        <div class="invalid-feedback">
+          Invalid MatchID
+        </div>
       </div>
     </div>
     <div class="row justify-content-center">

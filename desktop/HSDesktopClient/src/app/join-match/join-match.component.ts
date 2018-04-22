@@ -21,24 +21,20 @@ export class JoinMatchComponent implements OnInit {
   match;
   userID: string;
 
-
   joinMatch(match: string) {
     //API call with logic to handle successful match join. If successful, proceed to 'ban'
     this.match = match;
-    //this.config.joinMatch(this.userID,this.match)
-    //.subscribe(res => console.log(res));
-    //this.router.navigate(['ban']);
-    this.router.navigate(['validation']);
-
+    this.config.joinMatch(this.userID, this.match)
+      .subscribe(res => console.log(res)/*this.postJoin(res)*/);
   }
 
-  postJoin(success){
-    if(success){
-
+  postJoin(success) {
+    if (success) {
       this.router.navigate(['validation']);
     }
     else {
-      console.log('unsuccessful server response');
+      document.getElementById('match').className = "form-control is-invalid";
+      console.log("Unsuccessful SErver Response");
     }
   }
 

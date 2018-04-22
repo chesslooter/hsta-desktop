@@ -14,10 +14,12 @@ export class ConfigService {
 
   constructor(private http: Http, private electronService: ElectronService, private data: DataService) { }
 
+  // Calls API to retrieve decklists for a given user
   getUserDecklists(userid) {
     return this.http.get(this.url + '/api/get_user_decklists?userid=' + userid).map(res => res.json());
   }
 
+  // Calls API to add a deck to their list of entered decks
   addDeck(userid, deckcode, deckname) {
     return this.http.get(this.url + '/api/add_deck?userid=' +
       userid + '&deckcode=' + deckcode + '&deckname=' + deckname).map(res => res.json());
@@ -42,7 +44,7 @@ export class ConfigService {
     return this.http.get(this.url + '/api/login?battletag=' + email).map(res => res.json());
   }
 
-  verify(uID, oID) {
+  verify(uID, oID, tID) {
     this.data.changeValidating(true);
     var uBody = {};
     var uDeck = {};
