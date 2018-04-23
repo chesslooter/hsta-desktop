@@ -22,14 +22,18 @@ export class JoinMatchComponent implements OnInit {
   userID: string;
 
   joinMatch(match: string) {
-    //API call with logic to handle successful match join. If successful, proceed to 'ban'
     this.match = match;
-    this.config.joinMatch(this.userID, this.match)
+
+    console.log(this.userID);
+    console.log(this.match);
+   this.config.joinMatch(this.userID, this.match)
       .subscribe(res => console.log(res)/*this.postJoin(res)*/);
   }
 
   postJoin(success) {
     if (success) {
+      //Add post API call shiz to set active tournament
+      this.data.changeActiveTournament(1);
       this.router.navigate(['validation']);
     }
     else {

@@ -19,13 +19,14 @@ export class ValidationComponent implements OnInit {
   uID;
   oID = "";
   validating;
-  tID;
+  tID = 1;
 
   ngOnInit() {  
     this.data.currentDecks.subscribe(decks => this.decks=decks);
     this.data.currentDeckCodes.subscribe(deckCodes=>this.deckCodes=deckCodes);
     this.data.currentUserID.subscribe(uID =>this.uID = uID);
     this.data.currentValidating.subscribe(val => this.validating = val);
+    this.data.currentActiveTournament.subscribe(tID => this.tID = tID);
   }
 
   back() {
@@ -33,7 +34,7 @@ export class ValidationComponent implements OnInit {
   }
 
   validate() {
-    this.config.verify(this.uID, this.oID, this.tID);    
+    this.config.verify(this.uID, this.oID, 1);    
   }
 
 }
