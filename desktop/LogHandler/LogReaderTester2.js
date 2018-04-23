@@ -24,6 +24,8 @@ function gameOne() {
 
             friendlyDecklist = LogReader.reportFriendlyDecklist();
             opponentDecklist = LogReader.reportOpponentDecklist();
+            var p1 = LogReader.reportPlayerOne();
+            var p2 = LogReader.reportPlayerTwo();
 
             console.log("Friendly Decklist");
             for (var i in friendlyDecklist) {
@@ -34,6 +36,12 @@ function gameOne() {
             for (var i in opponentDecklist) {
                 console.log(opponentDecklist[i]);
             }
+
+            console.log("Player 1")
+            console.log(p1);
+            console.log("Player 2")
+            console.log(p2);
+
             clearInterval(interval);
 
             game1Complete = true;
@@ -54,6 +62,8 @@ function gameTwo() {
 
                 friendlyDecklist = LogReader.reportFriendlyDecklist();
                 opponentDecklist = LogReader.reportOpponentDecklist();
+                var p1 = LogReader.reportPlayerOne();
+                var p2 = LogReader.reportPlayerTwo();
 
                 console.log("Friendly Decklist");
                 for (var i in friendlyDecklist) {
@@ -64,6 +74,12 @@ function gameTwo() {
                 for (var i in opponentDecklist) {
                     console.log(opponentDecklist[i]);
                 }
+
+                console.log("Player 1")
+                console.log(p1);
+                console.log("Player 2")
+                console.log(p2);
+
                 clearInterval(interval);
                 game2Complete = true;
             }
@@ -85,6 +101,8 @@ function gameThree() {
 
                 friendlyDecklist = LogReader.reportFriendlyDecklist();
                 opponentDecklist = LogReader.reportOpponentDecklist();
+                var p1 = LogReader.reportPlayerOne();
+                var p2 = LogReader.reportPlayerTwo();
 
                 console.log("Friendly Decklist");
                 for (var i in friendlyDecklist) {
@@ -95,6 +113,12 @@ function gameThree() {
                 for (var i in opponentDecklist) {
                     console.log(opponentDecklist[i]);
                 }
+
+                console.log("Player 1")
+                console.log(p1);
+                console.log("Player 2")
+                console.log(p2);
+
                 clearInterval(interval);
                 game3Complete = true;
             }

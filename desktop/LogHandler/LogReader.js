@@ -89,6 +89,12 @@ var opponentDecklist = new Decklist();
 var opponentEntityList = [];
 
 /*
+// PLAYER OBJECT
+*/
+var player1;
+var player2;
+
+/*
 // Searches for new entries in the logFile specified to determine whether 
 // the log has changed and needs handling. These differences are 
 // handled line by line and passed to the  handleChange function to parse the data.
@@ -108,9 +114,12 @@ farseer.on('game-start', function(data) {
     // opponentEntityList = [];
 });
 
-farseer.on('game-over', function(data) {
-    console.log("Game End");
 
+farseer.on('game-over', function(players) {
+    console.log("Game End");
+    // console.log(data);
+    player1 = players[0];
+    player2 = players[1];
     // console.log(friendlyDecklist);
     // console.log(opponentDecklist);
 
@@ -203,6 +212,10 @@ exports.beginReporting = function() {
     friendlyEntityList = [];
     opponentEntityList = [];
 
+    // Refresh players
+    p1 = null;
+    p2 = null;
+
     reportDecklist = false;
     gameStarted = false;
     farseer.start();
@@ -237,6 +250,21 @@ exports.reportFriendlyDecklist = function() {
 exports.reportOpponentDecklist = function() {
     return opponentDecklist.decklist;
 };
+
+
+/*
+// Reports the data for player one
+*/
+exports.reportPlayerOne = function() {
+    return player1;
+}
+
+/*
+// Reports the data for player two
+*/
+exports.reportPlayerTwo = function() {
+    return player2;
+}
 
 /*
 // Set test log file location for testing without Hearthstone client
