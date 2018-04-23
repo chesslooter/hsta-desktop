@@ -123,7 +123,7 @@ ipcMain.on('kill', () => {
 });
 
 ipcMain.on('startValidation', function (event, arg) {
-  if(!runOnce){
+  if (!runOnce) {
     LogReader.getLogFile();
     LogReader.manualLogLocation();
     runOnce = true;
@@ -136,9 +136,15 @@ ipcMain.on('startValidation', function (event, arg) {
 
       friendlyDecklist = LogReader.reportFriendlyDecklist();
       opponentDecklist = LogReader.reportOpponentDecklist();
+      var p1 = LogReader.reportPlayerOne();
+      var p2 = LogReader.reportPlayerTwo();
+      var body = [];
+      body.push(friendlyDecklist);
+      body.push(opponentDecklist);
+      body.push(p1);
+      body.push(p2);
 
-      event.sender.send('logF', friendlyDecklist);
-      event.sender.send('logO', opponentDecklist);
+      event.sender.send('deckInfo', body);
 
       clearInterval(interval);
     }

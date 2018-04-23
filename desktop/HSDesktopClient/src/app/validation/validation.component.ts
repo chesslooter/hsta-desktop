@@ -17,9 +17,10 @@ export class ValidationComponent implements OnInit {
   deckCodes = [];
   activeCardList=[];
   uID;
-  oID = "";
+  oID = 33;
   validating;
   tID = 1;
+  mID = 1;
 
   ngOnInit() {  
     this.data.currentDecks.subscribe(decks => this.decks=decks);
@@ -34,7 +35,7 @@ export class ValidationComponent implements OnInit {
   }
 
   validate() {
-    this.config.verify(this.uID, this.oID, 1);    
+    this.config.verify(this.uID, this.oID, 1, this.mID);    
   }
 
 }

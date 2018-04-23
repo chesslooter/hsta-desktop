@@ -44,16 +44,22 @@ export class ConfigService {
 
   // Electron only. Calls into Log Reader to start waiting for info from the log file. Once match is complete,
   // info is sent back, parsed, and sent to API endpoint to determine validity
-  verify(uID, oID, tID) {
+  verify(uID, oID, tID, mID) {
     var uBody = {};
     var uDeck = {};
     var oBody = {};
     var oDeck = {};
+    var wID;
+
     this.electronService.ipcRenderer.send('startValidation');
-    var self = this;
-    this.electronService.ipcRenderer.once('logF', (event, arg) => {
-      for (var i = 0; i < arg.length; i++) {
-        uDeck[arg[i]['cardId']] = arg[i]['count'];
+  
+    this.electronService.ipcRenderer.once('deckInfo', (event, arg) => {
+      var friendlyDeck = arg[0];
+      var opponentDeck = arg[1];
+      var player1 = arg[2];
+      var player2 = arg[3];
+      for (var i = 0; i < friendlyDeck.length; i++) {
+        uDeck[friendlyDeck[i]['cardId']] = friendlyDeck[i]['count'];
       }
       uBody['userid'] = uID;
       console.log(uID);
@@ -61,21 +67,53 @@ export class ConfigService {
       uBody['tournamentid']=tID;
       console.log(tID);
       console.log(uDeck);
-      this.http.post(this.url + '/api/validate_decklist', <JSON>uBody).map(res => res.json()).subscribe(res => self.unlock(res));
-    });
-    this.electronService.ipcRenderer.once('logO', (event, arg) => {
-      for (var i = 0; i < arg.length; i++) {
-        oDeck[arg[i]['cardId']] = arg[i]['count'];
+      for (var i = 0; i < opponentDeck.length; i++) {
+        oDeck[opponentDeck[i]['cardId']] = opponentDeck[i]['count'];
       }
       oBody['userid'] = oID;
       oBody['deckjson'] = oDeck;
-      this.http.post(this.url + '/api/validate_decklist', oBody).map(res => res.json()).subscribe(res => console.log(res));
+
+      if(player1['team']=='FRIENDLY'){
+        if(player1['status']=='LOST'){
+          wID = oID;
+        } else {
+          wID = uID;
+        }
+      } else {
+        if(player1['status']=='LOST') {
+          wID = uID;
+        } else {
+          wID = oID;
+        }
+      }
+
+      this.http.post(this.url + '/api/validate_decklist', <JSON>uBody).map(res => res.json())
+      .subscribe(res => this.checkOpponent(res,oBody,wID,tID, mID));
+    
+      //opponent info      
+      console.log(player1);
+      console.log(player2);    
     });
   }
 
-  unlock(res){
-    console.log('unlocking');
+  checkOpponent(selfResult, oBody, wID, tID, mID){
+    this.http.post(this.url + '/api/validate_decklist', oBody).map(res => res.json())
+    .subscribe(res => this.submitResult(res, selfResult, mID, wID));
   }
+
+  submitResult(opponentResult, selfResult, mID,wID){
+    var fair = selfResult['fair_match'] && opponentResult['fair_match'];
+
+    console.log(fair);
+    console.log(mID);
+    console.log(wID);
+
+    this.http.get(this.url + '/api/update_match_result?matchid='+mID+'&winnerid='+wID+'&fairmatch='+fair)
+    .subscribe(res => console.log(res));
+
+  }
+
+ 
 
   // Calls API to join tournament. If already joined, returns decks user has submitted
   joinTournament(userID, tournamentID) {

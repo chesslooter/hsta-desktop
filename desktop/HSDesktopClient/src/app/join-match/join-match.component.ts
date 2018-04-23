@@ -23,11 +23,15 @@ export class JoinMatchComponent implements OnInit {
 
   joinMatch(match: string) {
     this.match = match;
+    this.data.changeActiveTournament(1);
+      this.router.navigate(['validation']);
+      /*
 
     console.log(this.userID);
     console.log(this.match);
    this.config.joinMatch(this.userID, this.match)
-      .subscribe(res => console.log(res)/*this.postJoin(res)*/);
+      .subscribe(res => console.log(res)/*this.postJoin(res));*/
+      
   }
 
   postJoin(success) {
