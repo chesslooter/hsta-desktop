@@ -10,6 +10,8 @@ export class DataService {
   private deckCodesSource = new BehaviorSubject<string[]>([]);
   private validatingSource = new BehaviorSubject<boolean>(false);
   private activeTournamentSource = new BehaviorSubject<number>(-1);
+  private matchSource = new BehaviorSubject<string>("");
+  private opponentSource = new BehaviorSubject<string>("");
 
   currentBattleTag = this.battleTagSource.asObservable();
   currentUserID = this.userIDSource.asObservable();
@@ -17,6 +19,8 @@ export class DataService {
   currentDeckCodes = this.deckCodesSource.asObservable();
   currentValidating = this.validatingSource.asObservable();
   currentActiveTournament = this.activeTournamentSource.asObservable();
+  currentMatch = this.matchSource.asObservable();
+  currentOpponent = this.opponentSource.asObservable();
 
   constructor() { }
 
@@ -34,6 +38,14 @@ export class DataService {
 
   changeBattleTag(battleTag: string) {
     this.battleTagSource.next(battleTag)
+  }
+
+  changeMatch(match: string) {
+    this.matchSource.next(match)
+  }
+
+  changeOpponent(opponent: string) {
+    this.opponentSource.next(opponent)
   }
 
   changeDecks(decks: string[]) {

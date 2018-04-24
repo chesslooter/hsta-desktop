@@ -30,8 +30,7 @@ export class JoinMatchComponent implements OnInit {
   }
 
   postJoin(res) {
-    console.log(res);
-    if (res['success']) {
+    if (res['success'] && (this.userID == res['match']['homeTeamId'] || this.userID ==res['match']['awayTeamId'])) {
       this.data.changeActiveTournament(this.tID);
       this.router.navigate(['validation']);
     }

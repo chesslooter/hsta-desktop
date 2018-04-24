@@ -103,6 +103,11 @@ export class ConfigService {
 
   submitResult(opponentResult, selfResult, mID,wID){
     var fair = selfResult['fair_match'] && opponentResult['fair_match'];
+    if(fair) {
+      fair = 1;
+    } else {
+      fair = 0;
+    }
 
     console.log(fair);
     console.log(mID);
@@ -141,7 +146,7 @@ export class ConfigService {
   joinMatch(userID, matchID) {
     console.log(userID);
     console.log(matchID);
-    return this.http.get(this.url + '/api/get_match?userid=' + userID + '&matchid=' + matchID)
+    return this.http.get(this.url + '/api/get_match?matchid='+matchID+'&userid='+userID)
       .map(res => res.json());
   }
 
