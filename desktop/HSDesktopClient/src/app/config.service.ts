@@ -139,6 +139,8 @@ export class ConfigService {
 
   // Calls API to join a tournament in a match. Returns false if MatchID is invalid, or if user is not in given match
   joinMatch(userID, matchID) {
+    console.log(userID);
+    console.log(matchID);
     return this.http.get(this.url + '/api/get_match?userid=' + userID + '&matchid=' + matchID)
       .map(res => res.json());
   }

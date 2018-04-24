@@ -16,33 +16,28 @@ export class JoinMatchComponent implements OnInit {
 
   ngOnInit() {
     this.data.currentUserID.subscribe(message => this.userID = message);
+    this.data.currentActiveTournament.subscribe(id => this.tID = id);
   }
 
   match;
   userID: string;
+  tID;
 
   joinMatch(match: string) {
     this.match = match;
-    this.data.changeActiveTournament(1);
-      this.router.navigate(['validation']);
-      /*
-
-    console.log(this.userID);
-    console.log(this.match);
    this.config.joinMatch(this.userID, this.match)
-      .subscribe(res => console.log(res)/*this.postJoin(res));*/
-      
+      .subscribe(res => this.postJoin(res));      
   }
 
-  postJoin(success) {
-    if (success) {
-      //Add post API call shiz to set active tournament
-      this.data.changeActiveTournament(1);
+  postJoin(res) {
+    console.log(res);
+    if (res['success']) {
+      this.data.changeActiveTournament(this.tID);
       this.router.navigate(['validation']);
     }
     else {
       document.getElementById('match').className = "form-control is-invalid";
-      console.log("Unsuccessful SErver Response");
+      console.log("Unsuccessful Server Response");
     }
   }
 
