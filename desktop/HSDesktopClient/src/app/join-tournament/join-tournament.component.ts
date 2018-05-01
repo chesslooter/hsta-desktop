@@ -36,16 +36,23 @@ export class JoinTournamentComponent implements OnInit {
     //equal to those valid for the tournament    
     this.tournament = tournament;
     this.config.joinTournament(this.userID, this.tournament)
-      .subscribe(res => this.postJoinTournament(res['success'], res['deck_names'], res['decks'], res['matches_played'], res['numDecks']));
+      .subscribe(res => this.postJoinTournament(res));
   }
 
-  postJoinTournament(success: boolean, eDecks, eDeckCodes, started: boolean, numDecks: number) {
+  postJoinTournament(res) {
+    var success = res['success'];
+    var eDecks = res['deck_names'];
+    var eDeckCodes = res['decks'];
+    var started = res['matches_played'];
+    var numDecks = res['numDecks'];
     if (success) {
       this.numDecks = numDecks;
       if (eDecks.length > 0 && eDeckCodes.length > 0) {
+        console.log(eDecks);
+        console.log(eDeckCodes);
         this.enteredDecks = eDecks;
         this.enteredDeckCodes = eDeckCodes;
-
+        console.log(this.enteredDecks);
         if (started) {
           this.locked = true;
         }
