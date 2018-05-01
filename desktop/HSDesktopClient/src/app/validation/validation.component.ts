@@ -38,6 +38,11 @@ export class ValidationComponent implements OnInit {
   }
 
   validate() {
+    console.log("userID: " + this.uID);
+    console.log("userID: " + this.oID);
+    console.log("userID: " + this.tID);
+    console.log("userID: " + this.mID);
+
     this.config.verify(this.uID, this.oID, this.tID, this.mID);    
   }
 

@@ -54,6 +54,8 @@ export class ConfigService {
     this.electronService.ipcRenderer.send('startValidation');
   
     this.electronService.ipcRenderer.once('deckInfo', (event, arg) => {
+      console.log("arg");
+      console.log(arg);
       var friendlyDeck = arg[0];
       var opponentDeck = arg[1];
       var player1 = arg[2];
