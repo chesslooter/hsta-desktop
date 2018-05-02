@@ -38,7 +38,7 @@ export class ValidationComponent implements OnInit {
   }
 
   validate() {
-    this.data.changeValidating(true);
+   // this.data.changeValidating(true);
     console.log("userID: " + this.uID);
     console.log("userID: " + this.oID);
     console.log("userID: " + this.tID);
