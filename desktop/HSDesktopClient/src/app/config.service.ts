@@ -104,6 +104,10 @@ export class ConfigService {
   }
 
   submitResult(opponentResult, selfResult, mID,wID){
+    console.log("opponent:")
+    console.log(opponentResult);
+    console.log("self:");
+    console.log(selfResult);
     var fair = selfResult['fair_match'] && opponentResult['fair_match'];
     if(fair) {
       fair = 1;
@@ -114,6 +118,8 @@ export class ConfigService {
     console.log(fair);
     console.log(mID);
     console.log(wID);
+
+    
 
     this.http.get(this.url + '/api/update_match_result?matchid='+mID+'&winnerid='+wID+'&fairmatch='+fair)
     .subscribe(res => console.log(res));
