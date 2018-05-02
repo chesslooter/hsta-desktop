@@ -69,12 +69,17 @@ export class ConfigService {
       uBody['tournamentid']=tID;
       console.log(tID);
       console.log(uDeck);
+      console.log(uBody);
       for (var i = 0; i < opponentDeck.length; i++) {
         oDeck[opponentDeck[i]['cardId']] = opponentDeck[i]['count'];
       }
+      console.log(oID);
       oBody['userid'] = oID;
       oBody['deckjson'] = <JSON>oDeck;
+      oBody['tournamentid']=tID;
 
+      console.log(oBody);
+      console.log(oDeck);
       if(player1['team']=='FRIENDLY'){
         if(player1['status']=='LOST'){
           wID = oID;
