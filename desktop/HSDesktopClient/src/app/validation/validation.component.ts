@@ -34,16 +34,17 @@ export class ValidationComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['match']);
+   this.router.navigate(['match']);
   }
 
   validate() {
+    this.data.changeValidating(true);
     console.log("userID: " + this.uID);
     console.log("userID: " + this.oID);
     console.log("userID: " + this.tID);
     console.log("userID: " + this.mID);
 
-    this.config.verify(this.uID, this.oID, this.tID, this.mID);    
+   this.config.verify(this.uID, this.oID, this.tID, this.mID);    
   }
 
 }

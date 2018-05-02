@@ -73,7 +73,7 @@ export class ConfigService {
         oDeck[opponentDeck[i]['cardId']] = opponentDeck[i]['count'];
       }
       oBody['userid'] = oID;
-      oBody['deckjson'] = oDeck;
+      oBody['deckjson'] = <JSON>oDeck;
 
       if(player1['team']=='FRIENDLY'){
         if(player1['status']=='LOST'){
@@ -99,7 +99,7 @@ export class ConfigService {
   }
 
   checkOpponent(selfResult, oBody, wID, tID, mID){
-    this.http.post(this.url + '/api/validate_decklist', oBody).map(res => res.json())
+    this.http.post(this.url + '/api/validate_decklist', <JSON>oBody).map(res => res.json())
     .subscribe(res => this.submitResult(res, selfResult, mID, wID));
   }
 
@@ -119,10 +119,10 @@ export class ConfigService {
     console.log(mID);
     console.log(wID);
 
-    
+
 
     this.http.get(this.url + '/api/update_match_result?matchid='+mID+'&winnerid='+wID+'&fairmatch='+fair)
-    .subscribe(res => console.log(res));
+    .subscribe(res => this.unlock(res));
 
   }
 
@@ -161,6 +161,10 @@ export class ConfigService {
   // Electron only command to exit app
   exit() {
     this.electronService.ipcRenderer.send('kill');
+  }
+
+  unlock(res){
+    this.data.changeValidating(false);
   }
 
 }
